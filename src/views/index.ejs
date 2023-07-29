@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Upload</title>
+  </head>
+  <body>
+    <main class="main_content">
+      <div class="content_img">
+        <img src="logo2.png" alt="Logo" />
+      </div>
+      <div class="content_text_file">
+        <h1 id="h1_file_name">{ File-Name }</h1>
+      </div>
+      <div id="progress_bar">
+        <div id="bar"></div>
+        <div id="progress">0%</div>
+      </div>
+
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" id="up_files" multiple />
+        <input type="submit" value="Subir" id="btn_upload" />
+      </form>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
