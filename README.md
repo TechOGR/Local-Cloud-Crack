@@ -1,5 +1,5 @@
 <p align="center">
-    <h1>Local Upload Files</h1>
+    <img src="/src/static/img/Mi_Logo.png">
 </p>
 
 
