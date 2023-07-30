@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/src/static/img/Mi_Logo.png">
+    <img src="/src/static/img/Mi_Logo.png" width="50px" height="50px">
 </p>
 
 
