@@ -2,9 +2,7 @@ const { Router } = require("express")
 const multer = require("multer")
 const { join } = require("path")
 const fs = require("fs")
-// import { dirname, join } from "path";
-// import { fileURLToPath } from "url";
-// import user_agent from "useragent"
+const { shell } = require("electron")
 
 
 const rutas = new Router();
@@ -78,5 +76,10 @@ rutas.get("/", (req, res) => {
 rutas.post("/upload", up.array("files"), (req, res) => {
     console.log(`Copia de: [ ${name_file} ] Terminado`);
 });
+
+rutas.post("/open_link", (req, res) => {
+    console.log(req.body)
+    res.status(200).json({ sms: "All ok" })
+})
 
 module.exports = rutas

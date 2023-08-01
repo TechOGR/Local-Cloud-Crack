@@ -43,7 +43,7 @@ app_exp.use(express.static(join(__dirname, "routes")))
 app_exp.use(user_agent.express())
 app_exp.use(rutas)
 
-const path_icon_app = join(__dirname, "static", "img", "Mi_Logo.png")
+const path_icon_app = join(__dirname, "static", "img", "Icon.png")
 const path_qr_code = join(__dirname, "static", "img", "QR.png")
 const createWindow = () => {
 
