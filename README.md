@@ -2,6 +2,10 @@
     <img src="/src/static/img/Mi_Logo.png" width="50px" height="50px">
 </p>
 
+```bash
+hola
+```
+
 
 # Redes Sociales
 <a href="https://www.youtube.com/@OnelCrack"><img src="/src/static/img/socials/YouTube.png" width="50px" height="50px"></img></a><a href="https://www.facebook.com/profile.php?id=100092376152191"><img src="/src/static/img/socials/Facebook.png" width="50px" height="50px"></img></a><a href=""><img src="/src/static/img/socials/Instagram.png" width="50px" height="50px"></a>
