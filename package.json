@@ -1,7 +1,7 @@
 {
-  "name": "algo_nuevo",
+  "name": "Upload_Files",
   "version": "1.0.0",
-  "description": "",
+  "description": "Software para subir archivos",
   "main": "src/main.js",
   "build": {
     "appId": "com.onel.upload",
@@ -11,7 +11,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "/src/static/img/Mi_Logo.png"
+      "icon": "/src/static/img/Icon.png"
     }
   },
   "scripts": {
