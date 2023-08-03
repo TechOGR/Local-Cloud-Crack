@@ -3,9 +3,10 @@ const multer = require("multer")
 const { join } = require("path")
 const fs = require("fs")
 const { shell } = require("electron")
-
+const express = require("express")
 
 const rutas = new Router();
+rutas.use(express.json())
 // const full_path = dirname(fileURLToPath(import.meta.url));
 
 let name_file = "";
@@ -67,9 +68,16 @@ const up = multer({
     }
 });
 
+const all_links = {
+    youtube: "https://www.youtube.com/@OnelCrack",
+    facebook: "https://www.facebook.com/profile.php?id=100092376152191",
+    twitter: "https://twitter.com/Onel_Crack?t=NFwmb3M7Gb8dr-B9oUubaw&s=09",
+    instagram: "https://www.instagram.com/onel_crack/",
+    github: "https://github.com/TechOGR"
+}
 
-rutas.get("/", (req, res) => {
-    res.render("index.ejs");
+rutas.get("/", async (req, res) => {
+    await res.render("index.ejs");
 });
 
 
@@ -79,6 +87,30 @@ rutas.post("/upload", up.array("files"), (req, res) => {
 
 rutas.post("/open_link", (req, res) => {
     console.log(req.body)
+
+    let name_class = req.body.link
+    let claves_links = Object.keys(all_links)
+
+    switch (name_class) {
+        case claves_links[0]: // YouTube
+            shell.openExternal(all_links.youtube)
+            break
+        case claves_links[1]: // Facebook
+            shell.openExternal(all_links.facebook)
+            break
+        case claves_links[2]: // Twitter
+            shell.openExternal(all_links.twitter)
+            break
+        case claves_links[3]: // Instagram
+            shell.openExternal(all_links.instagram)
+            break
+        case claves_links[4]: // GitHub
+            shell.openExternal(all_links.github)
+            break
+        default:
+            console.log("Invalid_Social_Red")
+    }
+
     res.status(200).json({ sms: "All ok" })
 })
 
