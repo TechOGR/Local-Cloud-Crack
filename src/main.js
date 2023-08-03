@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require("electron")
-const { dialog, Menu, ipcMain } = require("electron")
+const { Menu } = require("electron")
 const { join } = require("path")
 const express = require("express")
 const rutas = require("./routes/routes.js")
@@ -74,7 +74,7 @@ const createWindow = () => {
                             titleBarStyle: "hiddenInset",
                             icon: path_icon_app
                         })
-                        window_qr.loadFile(path_qr_code)
+                        await window_qr.loadFile(path_qr_code)
                     }
                 }
             ]
