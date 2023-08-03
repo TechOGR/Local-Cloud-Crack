@@ -1,9 +1,10 @@
 <p align="center">
-    <img src="/src/static/img/Mi_Logo.png" width="50px" height="50px">
+    <img src="/src/static/img/Icon.png" width="50px" height="50px">
 </p>
 
+## Clona este repositorio con el siguiente comando
 ```bash
-hola
+git clone https://github.com/TechOGR/Local-Upload-Files
 ```
 
 
