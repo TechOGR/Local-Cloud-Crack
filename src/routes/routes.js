@@ -1,63 +1,92 @@
 const { Router } = require("express")
 const multer = require("multer")
-const { join } = require("path")
+const { join, extname } = require("path")
 const fs = require("fs")
+const { promises, readdir } = require("fs")
 const { shell } = require("electron")
-const express = require("express")
+const { json } = require("express")
 
 const rutas = new Router();
-rutas.use(express.json())
-// const full_path = dirname(fileURLToPath(import.meta.url));
+
+rutas.use(json())
 
 let name_file = "";
 
 const save_storage = multer.diskStorage({
     destination: function (req, file, cb) {
+
+        // console.log(`[${file.originalname}] >><< ${file.mimetype}`)
+
         console.log(`Copiando: [ ${file.originalname} ]`)
+
         if (file.mimetype.endsWith("vbox-extpack")
             || file.mimetype.endsWith("octet-stream") || file.mimetype.endsWith("x-tar")) {
-            cb(null, "D:/Subidas/Otros")
+            cb(null, "D:/Uploads/Otros")
         } else if (file.mimetype.startsWith('video')) {
-            cb(null, "D:/Subidas/Videos")
+            cb(null, "D:/Uploads/Videos")
         } else if (file.mimetype.startsWith('image')) {
-            cb(null, "D:/Subidas/Imagenes")
+            cb(null, "D:/Uploads/Imagenes")
         } else if (file.mimetype.startsWith('audio')) {
-            cb(null, "D:/Subidas/Audio")
+            cb(null, "D:/Uploads/Audio")
         } else if (file.mimetype.endsWith("vnd.android.package-archive")
             || file.mimetype.endsWith("vnd.android.package-archive")) {
-            cb(null, "D:/Subidas/Apk")
+            cb(null, "D:/Uploads/Apk")
         } else if (file.mimetype.endsWith("x-msdownload")) {
-            cb(null, "D:/Subidas/Programas")
+            cb(null, "D:/Uploads/Programas")
         } else if (file.mimetype.endsWith("x-msdos-program")) {
-            cb(null, "D:/Subidas/Programas")
+            cb(null, "D:/Uploads/Programas")
         } else if (file.mimetype.endsWith("zip")) {
-            cb(null, "D:/Subidas/Otros")
+            cb(null, "D:/Uploads/Compactados")
         } else if (file.mimetype.endsWith("pdf")) {
-            cb(null, "D:/Subidas/PDF")
+            cb(null, "D:/Uploads/PDF")
+        } else if (file.mimetype.endsWith("x-tar")) {
+            cb(null, "D:/Uploads/Compactados")
         } else {
-            cb(null, "D:/Subidas")
+            cb(null, "D:/Uploads")
         }
     },
     filename: function (req, file, cb) {
         name_file += file.originalname + "\n"
-        let main_dir = "D:/Subidas"
+
         let copiado = false
-        fs.readdir(main_dir, (err, carpetas) => {
-            let lista_carpetas = []
-            for (let i = 0; i < carpetas.length; i++) {
-                lista_carpetas.push(join("D:/Subidas", carpetas[i]))
-            }
-            if (lista_carpetas.length === 7) {
-                for (let i = 0; i < lista_carpetas.length; i++) {
-                    fs.readdir(lista_carpetas[i], (err, archivos) => {
-                        if (archivos.length <= 0 && copiado == false) {
-                            cb(null, file.originalname)
-                            copiado = true
-                        }
-                    })
+
+        const load_dir = async (dir_main) => {
+            const main_folder_dir = dir_main
+
+            try {
+                const folders = await promises.readdir(main_folder_dir)
+
+                const list_folders = []
+
+                for (let fold of folders) {
+                    const stats = await promises.stat(join(main_folder_dir, fold))
+                    if (stats.isDirectory()) {
+                        list_folders.push(join(main_folder_dir, fold))
+                    }
                 }
+
+                if (list_folders.length === 8) {
+                    for (let i = 0; i < list_folders.length; i++) {
+                        const archivos = await promises.readdir(list_folders[i])
+                        if (archivos.includes(file.originalname)) {
+                            copiado = true
+                        } else {
+                            copiado = false
+                        }
+                    }
+                    if (!copiado) {
+                        cb(null, file.originalname)
+                        copiado = true
+                    }
+                }
+
+
+            } catch (err) {
+                console.log(err)
             }
-        })
+        }
+        const main_dir = "D:/Uploads"
+        load_dir(main_dir).catch(err => console.log(err))
     },
 });
 
@@ -77,7 +106,7 @@ const all_links = {
 }
 
 rutas.get("/", async (req, res) => {
-    await res.render("index.ejs");
+    await res.render("index.ejs", { title: "Upload-Files" });
 });
 
 
@@ -85,7 +114,7 @@ rutas.post("/upload", up.array("files"), (req, res) => {
     console.log(`Copia de: [ ${name_file} ] Terminado`);
 });
 
-rutas.post("/open_link", (req, res) => {
+rutas.post("/open_link", async (req, res) => {
     console.log(req.body)
 
     let name_class = req.body.link
@@ -93,25 +122,25 @@ rutas.post("/open_link", (req, res) => {
 
     switch (name_class) {
         case claves_links[0]: // YouTube
-            shell.openExternal(all_links.youtube)
+            await shell.openExternal(all_links.youtube)
             break
         case claves_links[1]: // Facebook
-            shell.openExternal(all_links.facebook)
+            await shell.openExternal(all_links.facebook)
             break
         case claves_links[2]: // Twitter
-            shell.openExternal(all_links.twitter)
+            await shell.openExternal(all_links.twitter)
             break
         case claves_links[3]: // Instagram
-            shell.openExternal(all_links.instagram)
+            await shell.openExternal(all_links.instagram)
             break
         case claves_links[4]: // GitHub
-            shell.openExternal(all_links.github)
+            await shell.openExternal(all_links.github)
             break
         default:
             console.log("Invalid_Social_Red")
     }
 
-    res.status(200).json({ sms: "All ok" })
+    await res.status(200).json({ sms: "All ok" })
 })
 
 module.exports = rutas
