@@ -4,11 +4,6 @@ const progress = document.getElementById("progress");
 const file_name = document.getElementById("h1_file_name");
 const input_file = document.getElementById("up_files");
 
-
-let warn_item = document.createElement("h1")
-warn_item.className = "warn"
-warn_item.textContent = "Selecciona uno o mas archivos"
-
 form.addEventListener("submit", (event) => {
 
   event.preventDefault();
