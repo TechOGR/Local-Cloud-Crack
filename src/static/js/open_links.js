@@ -1,4 +1,6 @@
 const all_img = document.querySelectorAll(".img")
+const navigator_user_agent = navigator.userAgent
+
 
 all_img.forEach((elemento) => {
 
@@ -23,7 +25,12 @@ all_img.forEach((elemento) => {
         const name_to_send = name_link.split(" ")
         const fileter_name = name_to_send[1]
 
-        function_post(fileter_name)
+        if (navigator_user_agent.match(/Android/i) || navigator_user_agent.match(/iPhone/i)) {
+
+        } else {
+            function_post(fileter_name)
+        }
+
 
     })
 
