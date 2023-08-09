@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/src/static/img/Icon.png" width="100px" height="100px">
+    <img src="/src/static/img/Icon.png" width="200px" height="200px">
 </p>
 
 ## Clona este repositorio con el siguiente comando
