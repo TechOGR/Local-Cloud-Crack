@@ -15,7 +15,7 @@ let name_file = "";
 const save_storage = multer.diskStorage({
     destination: function (req, file, cb) {
 
-        // console.log(`[${file.originalname}] >><< ${file.mimetype}`)
+        console.log(`[${file.originalname}] >><< ${file.mimetype}`)
 
         console.log(`Copiando: [ ${file.originalname} ]`)
 
@@ -40,6 +40,10 @@ const save_storage = multer.diskStorage({
         } else if (file.mimetype.endsWith("pdf")) {
             cb(null, "D:/Uploads/PDF")
         } else if (file.mimetype.endsWith("x-tar")) {
+            cb(null, "D:/Uploads/Compactados")
+        } else if (file.mimetype.endsWith("x-7z-compressed")) {
+            cb(null, "D:/Uploads/Compactados")
+        } else if (file.mimetype.endsWith("rar")) {
             cb(null, "D:/Uploads/Compactados")
         } else {
             cb(null, "D:/Uploads")
@@ -74,12 +78,13 @@ const save_storage = multer.diskStorage({
                             copiado = false
                         }
                     }
-                    if (!copiado) {
-                        cb(null, file.originalname)
-                        copiado = true
-                    }
                 }
-
+                if (!copiado) {
+                    cb(null, file.originalname)
+                    copiado = true
+                } else {
+                    copiado = false
+                }
 
             } catch (err) {
                 console.log(err)
