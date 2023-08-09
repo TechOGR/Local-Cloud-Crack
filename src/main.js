@@ -24,7 +24,8 @@ app_exp.use(rutas)
 
 
 const path_icon_app = join(__dirname, "static", "img", "Icon.png")
-const path_qr_code = join(__dirname, "static", "img", "QR.png")
+// const path_qr_code = join(__dirname, "static", "img", "QR.png")
+const real_path_qrcode = join('C:', 'Users', `${process.env.USERNAME}`, 'AppData', 'Local', 'Qr-Code.png')
 const createWindow = () => {
 
     const win = new BrowserWindow({
@@ -38,7 +39,7 @@ const createWindow = () => {
     })
 
     win.loadURL(`http://localhost:${port}`)
-
+    let check_create_qr = false
     const menuTemplate = [
         {
             label: "Opciones",
@@ -46,16 +47,23 @@ const createWindow = () => {
                 {
                     label: "Qr-Code Wifi",
                     click: async () => {
-                        await ip_wifi(__dirname).catch(err => console.log(err))
-                        const wifi_qr = new BrowserWindow({
-                            width: 500,
-                            height: 500,
-                            resizable: false,
-                            autoHideMenuBar: true,
-                            titleBarStyle: "hiddenInset",
-                            icon: path_icon_app
-                        })
-                        await wifi_qr.loadFile(path_qr_code)
+                        if (!check_create_qr) {
+                            await ip_wifi(real_path_qrcode).catch(err => {
+                                console.log("Algo")
+                            })
+                            check_create_qr = 1
+                            
+                        } else {
+                            const wifi_qr = new BrowserWindow({
+                                width: 500,
+                                height: 500,
+                                resizable: false,
+                                autoHideMenuBar: true,
+                                titleBarStyle: "hiddenInset",
+                                icon: path_icon_app
+                            })
+                            wifi_qr.loadFile(real_path_qrcode)
+                        }
                     }
                 },
                 // Me quedé Aquí
