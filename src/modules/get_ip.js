@@ -1,32 +1,29 @@
 const { networkInterfaces } = require("os")
 const { exec } = require("child_process")
 const { toFile } = require("qrcode")
-const { join } = require("path")
+const fs = require("fs")
 
-const real_path_qrcode = `C:/Users/${process.env.USERNAME}/AppData/Local/Qr-Code.png`
-
-const create_qr = async (ip, port, main_path) => {
-    try {
-        toFile(join(main_path, "statci", "img", "QR.png")), `${ip}:${port}`, {
+async function create_new_Qr_Code(ip, port, real_path_qrcode) {
+    if (fs.existsSync(real_path_qrcode)) {
+        console.log("Ya existe Bro")
+    } else {
+        toFile(real_path_qrcode, `http://${ip}:${port}`, {
             color: {
-                dark: "#F57006",
-                light: "#000"
+                light: "#000",
+                dark: "#F57006"
             },
             errorCorrectionLevel: "H",
-            margin: 4,
+            margin: 5,
             version: 7,
-            scale: 8,
-            type: "png"
-        }, (err) => {
-            if (err) throw err;
-            console.log("QR-Code Creado");
-        }
-    } catch (error) {
-        console.log(error)
+            scale: 8
+        }, (error) => {
+            if (error) throw error;
+            exec('msg * Qr-Code Creado :D\nPrecione donde mismo de nuevo para verlo')
+        })
     }
 }
 
-const ip_wifi = async (path_main) => {
+const ip_wifi = async (path_qr) => {
     const ifaces = networkInterfaces()
 
     try {
@@ -35,7 +32,8 @@ const ip_wifi = async (path_main) => {
 
         const wifi_ip = wifi_2["address"]
 
-        create_qr(wifi_ip, 8585, path_main)
+        create_new_Qr_Code(wifi_ip, 8585, path_qr)
+
     } catch (err) {
         exec("msg * No Tienes Wifi :(")
     }
