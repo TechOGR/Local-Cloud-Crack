@@ -24,7 +24,7 @@ app_exp.use(rutas)
 
 
 const path_icon_app = join(__dirname, "static", "img", "Icon.png")
-// const path_qr_code = join(__dirname, "static", "img", "QR.png")
+// const path_qr_code = join(__dirname, "static", "img", "QR.png") // Dev Qr-Code
 const real_path_qrcode = join('C:', 'Users', `${process.env.USERNAME}`, 'AppData', 'Local', 'Qr-Code.png')
 const createWindow = () => {
 
@@ -43,6 +43,26 @@ const createWindow = () => {
     const menuTemplate = [
         {
             label: "Opciones",
+            submenu: [
+                {
+                    label: "Up",
+                    click: async () => {
+                        await win.loadURL(`http://localhost:${port}`)
+                    }
+                },
+                {
+                    label: "Down",
+                    click: async () => {
+                        await win.loadURL(`http://localhost:${port}/cloud`)
+                    }
+                }
+            ]
+        },
+        {
+            label: "   "
+        },
+        {
+            label: "Qr-Code",
             submenu: [
                 {
                     label: "Qr-Code Wifi",
@@ -83,7 +103,8 @@ const createWindow = () => {
                     }
                 }
             ]
-        },
+        }
+        
     ]
     const menuBar = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(menuBar)
