@@ -111,7 +111,7 @@ const all_links = {
 }
 
 rutas.get("/", async (req, res) => {
-    await res.render("index.ejs", { title: "Upload-Files" });
+    await res.render("index.ejs", { title: "Up_LocalCloud_Down" });
 });
 
 
@@ -146,6 +146,50 @@ rutas.post("/open_link", async (req, res) => {
     }
 
     await res.status(200).json({ sms: "All ok" })
+})
+
+rutas.get("/cloud", async (req, res) => {
+
+    const load_files = async (path) => {
+        try {
+
+            const files = await promises.readdir(path)
+            const list_Folders = []
+            const list_Files = []
+
+            for (item of files) {
+                if (item == "System Volume Information") { console.log("Skip") }
+                else {
+
+                    const stat = await promises.stat(join(path, item))
+
+                    if (stat.isDirectory()) {
+                        list_Folders.push(join(path, item))
+                    } else {
+                        list_Files.push(join(path, item))
+                    }
+                }
+            }
+
+            return { files: list_Files, folders: list_Folders }
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    const path = "D:/"
+    const { files, folders } = await load_files(path)
+    console.log(folders)
+
+    await res.render("cloud.ejs", {
+        title: "Up_LocalCloud_Down",
+        carpetas: folders,
+        archivos: files
+    })
+})
+
+rutas.post("/openfold", async (req, res) => {
+    
 })
 
 module.exports = rutas
