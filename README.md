@@ -1,5 +1,7 @@
 <p align="center">
+
 ![Static Badge](https://img.shields.io/badge/follow-me-red)
+
 </p>
 
 <p align="center">
