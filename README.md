@@ -1,5 +1,5 @@
 <p align="center">
-    # Local-Cloud-Crack
+![Static Badge](https://img.shields.io/badge/follow-me-red)
 </p>
 
 <p align="center">
