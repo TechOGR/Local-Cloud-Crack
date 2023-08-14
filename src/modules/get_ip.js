@@ -5,7 +5,19 @@ const fs = require("fs")
 
 async function create_new_Qr_Code(ip, port, real_path_qrcode) {
     if (fs.existsSync(real_path_qrcode)) {
-        console.log("Ya existe Bro")
+        toFile(real_path_qrcode, `http://${ip}:${port}`, {
+            color: {
+                light: "#000",
+                dark: "#F57006"
+            },
+            errorCorrectionLevel: "H",
+            margin: 5,
+            version: 7,
+            scale: 8
+        }, (error) => {
+            if (error) throw error;
+            exec('msg * Qr-Code Creado :D\nPrecione donde mismo de nuevo para verlo')
+        })
     } else {
         toFile(real_path_qrcode, `http://${ip}:${port}`, {
             color: {
