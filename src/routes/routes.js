@@ -189,7 +189,7 @@ rutas.get("/cloud", async (req, res) => {
 })
 
 rutas.post("/openfold", async (req, res) => {
-    
+    console.log(req.body)
 })
 
 module.exports = rutas
