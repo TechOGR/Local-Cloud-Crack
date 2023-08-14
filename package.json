@@ -1,5 +1,5 @@
 {
-  "name": "upload_files",
+  "name": "Up_Local_Cloud_Down",
   "version": "1.0.0",
   "description": "Software para subir archivos",
   "main": "src/main.js",
@@ -32,7 +32,6 @@
   "devDependencies": {
     "electron": "^25.3.2",
     "electron-builder": "^24.6.3",
-    "nodemon": "^3.0.1",
-    "serve-favicon": "^2.5.0"
+    "nodemon": "^3.0.1"
   }
 }
