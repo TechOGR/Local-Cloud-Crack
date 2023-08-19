@@ -10,7 +10,7 @@
 
 ## Clona este repositorio con el siguiente comando
 ```bash
-git clone https://github.com/TechOGR/Local-Upload-Files
+git clone https://github.com/TechOGR/Local-Cloud-Crack
 ```
 ## Situate dentro del repositorio y copia y pega
 ```bash
