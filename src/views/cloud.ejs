@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="cloud.css" />
     <script defer src="cloud.js"></script>
+    <script defer src="open_links.js"></script>
     <title><%- title %></title>
   </head>
   <body>
+    <div id="cursor"></div>
+    <div id="content_h1">
+      <h1 id="page_title">FileDownloadExplorer</h1>
+    </div>
     <main class="main_cloud">
-      <div id="content_h1">
-        <h1 id="page_title">FileDownloadExplorer</h1>
-      </div>
-      <div class="content_elements">
-        <% carpetas.forEach((elemento) => { %>
-        <li><%= elemento %></li>
-        <% }) %>
-      </div>
+      <% carpetas.forEach((elemento) => { %>
+      <li><%= elemento %></li>
+      <% }) %>
     </main>
 
     <%- include("./partials/footer.ejs") %>
