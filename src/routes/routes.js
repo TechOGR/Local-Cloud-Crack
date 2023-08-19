@@ -1,10 +1,11 @@
 const { Router } = require("express")
-const multer = require("multer")
 const { join, extname } = require("path")
-const fs = require("fs")
-const { promises, readdir } = require("fs")
+const { promises } = require("fs")
 const { shell } = require("electron")
 const { json } = require("express")
+const multer = require("multer")
+const fs = require("fs")
+const ejs = require("ejs")
 
 const rutas = new Router();
 
@@ -164,9 +165,9 @@ rutas.get("/cloud", async (req, res) => {
                     const stat = await promises.stat(join(path, item))
 
                     if (stat.isDirectory()) {
-                        list_Folders.push(join(path, item))
+                        list_Folders.push(join(item))
                     } else {
-                        list_Files.push(join(path, item))
+                        list_Files.push(join(item))
                     }
                 }
             }
@@ -179,17 +180,49 @@ rutas.get("/cloud", async (req, res) => {
     }
     const path = "D:/"
     const { files, folders } = await load_files(path)
-    console.log(folders)
 
     await res.render("cloud.ejs", {
-        title: "Up_LocalCloud_Down",
+        title: "Local-Cloud-Crack",
         carpetas: folders,
         archivos: files
     })
 })
 
 rutas.post("/openfold", async (req, res) => {
-    console.log(req.body)
+    const main_path = "D:/"
+    const name_recv = req.body.name
+
+
+    const read_path = async (path_) => {
+
+        try {
+
+            const stats = await promises.stat(path_)
+
+            if (stats.isDirectory()) {
+                const items = await promises.readdir(path_)
+                const items_path = items.map(file => join(path_, file))
+
+                return { archivos: items_path }
+
+            } else {
+                console.log(path_)
+                await res.download(path_)
+                return { archivos: "Nada" }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const new_path = join(main_path, name_recv)
+
+    const { archivos } = await read_path(new_path)
+
+    await res.render("../views/cloud.ejs", {
+        title: "Local-Cloud-Crack",
+        carpetas: archivos
+    })
 })
 
 module.exports = rutas
