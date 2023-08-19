@@ -1,8 +1,9 @@
 const { app, BrowserWindow } = require("electron")
 const { Menu } = require("electron")
 const { join } = require("path")
-const express = require("express")
 const { ip_wifi, ip_ethernet } = require("./modules/get_ip")
+const express = require("express")
+const url = require("url")
 const rutas = require("./routes/routes.js")
 const user_agent = require("express-useragent")
 const favicon = require("serve-favicon")
@@ -45,15 +46,29 @@ const createWindow = () => {
             label: "Opciones",
             submenu: [
                 {
-                    label: "Up",
+                    label: "Upload",
                     click: async () => {
                         await win.loadURL(`http://localhost:${port}`)
                     }
                 },
                 {
-                    label: "Down",
+                    label: "Download",
                     click: async () => {
                         await win.loadURL(`http://localhost:${port}/cloud`)
+                    }
+                },
+                {
+                    label: "Set Path",
+                    click: async () => {
+                        new BrowserWindow({
+                            width: 300,
+                            height: 120,
+                            title: "Write Path Here",
+                            autoHideMenuBar: true,
+                            titleBarStyle: "hiddenInset",
+                            resizable: false,
+                            icon: path_icon_app
+                        })
                     }
                 }
             ]
@@ -72,7 +87,7 @@ const createWindow = () => {
                                 console.log("Algo")
                             })
                             check_create_qr = 1
-                            
+
                         } else {
                             const wifi_qr = new BrowserWindow({
                                 width: 500,
@@ -104,7 +119,7 @@ const createWindow = () => {
                 }
             ]
         }
-        
+
     ]
     const menuBar = Menu.buildFromTemplate(menuTemplate)
     Menu.setApplicationMenu(menuBar)
