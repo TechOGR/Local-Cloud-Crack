@@ -201,7 +201,7 @@ rutas.post("/openfold", async (req, res) => {
 
             if (stats.isDirectory()) {
                 const items = await promises.readdir(path_)
-                const items_path = items.map(file => join(path_, file))
+                const items_path = items.map((file) => join(path_, file))
 
                 return { archivos: items_path }
 

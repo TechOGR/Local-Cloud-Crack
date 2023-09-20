@@ -31,7 +31,6 @@ all_img.forEach((elemento) => {
             function_post(fileter_name)
         }
 
-
     })
 
 })

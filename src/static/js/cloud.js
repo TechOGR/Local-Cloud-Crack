@@ -41,7 +41,8 @@ all_li.forEach(async (elemento) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ name: name_element })
-            }).then(response => console.log(response.json()))
+            })
+                .then(response => response.json())
                 .then(data => console.log(data))
                 .catch(error => console.log(error))
         }
