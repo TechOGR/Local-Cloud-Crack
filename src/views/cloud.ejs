@@ -14,9 +14,21 @@
       <h1 id="page_title">FileDownloadExplorer</h1>
     </div>
     <main class="main_cloud">
-      <% carpetas.forEach((elemento) => { %>
-      <li><%= elemento %></li>
-      <% }) %>
+      <% let keys = Object.keys(list_files); let values =
+      Object.values(list_files); %>
+      <% for( let i = 0; i < keys.length; i++ ) { %>
+      <% if (values[i] == true) { %>
+       <div class="container_items">
+        <img src="items/folder.png" alt="">
+        <li class="itmes"><%= keys[i]%></li>
+       </div>
+      <% } else { %>
+        <div class="container_items">
+          <img src="items/txt.png" alt="">
+          <li><%= keys[i]%></li>
+         </div>
+      <% } %>
+      <% } %>
     </main>
 
     <%- include("./partials/footer.ejs") %>
