@@ -1,5 +1,52 @@
-const cursor = document.getElementById("cursor")
-const all_li = document.querySelectorAll("li")
+const cursor = document.getElementById("cursor");
+const all_container = document.querySelectorAll(".container_items");
+
+all_container.forEach((elemento) => {
+    elemento.addEventListener("click", async (event) => {
+        const data_li = event.target.closest(".container_items").querySelector("li").textContent;
+
+        let last_index = data_li.lastIndexOf(".");
+        let extension = data_li.slice(last_index);
+
+        if (extension === ".txt") {
+            // Agrega aquí la lógica para archivos con extensión .txt
+        } else {
+            try {
+                const response = await fetch(`/cloud/${encodeURIComponent(data_li)}`, {
+                    method: "GET",
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const names_files = Object.keys(data);
+                    const status_files = Object.values(data);
+
+                    const mainCloudElement = document.querySelector(".main_cloud");
+                    mainCloudElement.innerHTML = ""; // Vaciar el contenedor principal
+
+                    names_files.forEach((item, index) => {
+                        const containerElement = document.createElement("div");
+                        containerElement.classList.add("container_items");
+
+                        const imgElement = document.createElement("img");
+                        imgElement.src = status_files[index] ? "items/folder.png" : "items/txt.png";
+
+                        const liElement = document.createElement("li");
+                        liElement.textContent = item;
+
+                        containerElement.appendChild(imgElement);
+                        containerElement.appendChild(liElement);
+
+                        mainCloudElement.appendChild(containerElement);
+                    });
+                } else {
+                    throw new Error("Error obteniendo lista de archivos");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
+});
 
 document.addEventListener("mousemove", async (e) => {
     const posX = e.clientX;
@@ -29,29 +76,4 @@ document.addEventListener("mouseup", async (e) => {
         0 0 45px black,
         0 0 60px black
     `
-})
-
-all_li.forEach(async (elemento) => {
-    elemento.addEventListener("click", async (event) => {
-
-        async function send_name(name_element) {
-            await fetch("/openfold", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ name: name_element })
-            })
-                .then(response => response.json())
-                .then(data => console.log(data))
-                .catch(error => console.log(error))
-        }
-
-        let name_to_send = elemento.textContent
-
-        console.log(name_to_send)
-
-        await send_name(name_to_send)
-
-    })
 })
