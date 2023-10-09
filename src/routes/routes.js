@@ -155,74 +155,68 @@ rutas.get("/cloud", async (req, res) => {
         try {
 
             const files = await promises.readdir(path)
-            const list_Folders = []
-            const list_Files = []
+            const files_list = {}
 
             for (item of files) {
-                if (item == "System Volume Information") { console.log("Skip") }
+                if (item == "System Volume Information" || item == "$RECYCLE.BIN") { console.log("Skip") }
                 else {
 
                     const stat = await promises.stat(join(path, item))
 
                     if (stat.isDirectory()) {
-                        list_Folders.push(join(item))
+                        files_list[item] = true
                     } else {
-                        list_Files.push(join(item))
+                        files_list[item] = false
                     }
                 }
             }
 
-            return { files: list_Files, folders: list_Folders }
+            console.log(files_list)
+
+            return files_list
 
         } catch (err) {
             console.log(err)
         }
     }
-    const path = "D:/"
-    const { files, folders } = await load_files(path)
+    const path = `D:/`
+    const object_files = await load_files(path)
 
     await res.render("cloud.ejs", {
         title: "Local-Cloud-Crack",
-        carpetas: folders,
-        archivos: files
+        list_files: object_files
     })
 })
 
-rutas.post("/openfold", async (req, res) => {
-    const main_path = "D:/"
-    const name_recv = req.body.name
+rutas.get("/cloud/:folder", async (req, res) => {
+    const carpeta = req.params.folder
 
+    const load_path = async (path) => {
+        const files = await promises.readdir(path)
+        const list_files = {}
 
-    const read_path = async (path_) => {
-
-        try {
-
-            const stats = await promises.stat(path_)
-
-            if (stats.isDirectory()) {
-                const items = await promises.readdir(path_)
-                const items_path = items.map((file) => join(path_, file))
-
-                return { archivos: items_path }
-
+        for (item of files) {
+            if (item == "$RECYCLE.BIN") {
+                console.log("Skip")
             } else {
-                console.log(path_)
-                await res.download(path_)
-                return { archivos: "Nada" }
+                const stat = await promises.stat(join(path, item))
+
+                if (stat.isDirectory()) {
+                    list_files[item] = true
+                } else {
+                    list_files[item] = false
+                }
             }
-        } catch (err) {
-            console.log(err)
         }
+
+        return list_files
     }
 
-    const new_path = join(main_path, name_recv)
+    const lista_archivos = await load_path(`D:/${carpeta}`)
 
-    const { archivos } = await read_path(new_path)
+    console.log(lista_archivos)
 
-    await res.render("../views/cloud.ejs", {
-        title: "Local-Cloud-Crack",
-        carpetas: archivos
-    })
+    res.json(lista_archivos)
 })
 
 module.exports = rutas
