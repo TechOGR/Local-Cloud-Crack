@@ -9,7 +9,7 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-image: url("wall_cloud.jpg");
+    background-image: url("wall_down.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -35,6 +35,11 @@ body:hover #cursor {
     background: rgba(200, 200, 200, .2);
     overflow-y: auto;
     z-index: -1;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .main_cloud::-webkit-scrollbar {
@@ -62,17 +67,33 @@ body:hover #cursor {
     display: inline;
     font-size: 30px;
     font-family: "Comic Sans MS";
-    background: linear-gradient(to bottom right, #00f, #000, #00f);
+    background: linear-gradient(to bottom right, rgb(255, 0, 179), #000, rgb(255, 0, 34));
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+}
+
+.container_items {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+img {
+    position:relative;
+    width: 100px;
+    height: 100px;
+
 }
 
 li {
     position: relative;
     margin-top: 10px;
     font-family: "Arial Rounded MT";
-    font-size: 30px;
+    font-size: 20px;
     background: radial-gradient(rgb(194, 0, 161), #000, #0f0f00);
     background-clip: text;
     -webkit-background-clip: text;
