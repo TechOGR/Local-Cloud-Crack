@@ -8,7 +8,7 @@ const rutas = require("./routes/routes.js")
 const user_agent = require("express-useragent")
 const favicon = require("serve-favicon")
 
-const port = 8585
+const port = 8000
 
 app_exp = express()
 const path_favicon = join(__dirname, "static", "img", "favicon.ico")
