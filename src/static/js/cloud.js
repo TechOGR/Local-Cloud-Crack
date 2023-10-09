@@ -9,7 +9,7 @@ all_container.forEach((elemento) => {
         let extension = data_li.slice(last_index);
 
         if (extension === ".txt") {
-            // Agrega aquí la lógica para archivos con extensión .txt
+            // Me falta esto
         } else {
             try {
                 const response = await fetch(`/cloud/${encodeURIComponent(data_li)}`, {
