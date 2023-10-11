@@ -149,6 +149,11 @@ rutas.post("/open_link", async (req, res) => {
     await res.status(200).json({ sms: "All ok" })
 })
 
+const main_path = "D:/"
+let iter_folders = [main_path]
+let last_folders = ""
+let conter = 0
+
 rutas.get("/cloud", async (req, res) => {
 
     const load_files = async (path) => {
@@ -158,7 +163,7 @@ rutas.get("/cloud", async (req, res) => {
             const files_list = {}
 
             for (item of files) {
-                if (item == "System Volume Information" || item == "$RECYCLE.BIN") { console.log("Skip") }
+                if (item == "System Volume Information" || item == "$RECYCLE.BIN") { }
                 else {
 
                     const stat = await promises.stat(join(path, item))
@@ -171,8 +176,6 @@ rutas.get("/cloud", async (req, res) => {
                 }
             }
 
-            console.log(files_list)
-
             return files_list
 
         } catch (err) {
@@ -181,42 +184,148 @@ rutas.get("/cloud", async (req, res) => {
     }
     const path = `D:/`
     const object_files = await load_files(path)
+    last_folders = ""
+    iter_folders = [path]
 
     await res.render("cloud.ejs", {
         title: "Local-Cloud-Crack",
         list_files: object_files
     })
 })
+let folder_params = ""
+rutas.get("/back", async (req, res) => {
 
-rutas.get("/cloud/:folder", async (req, res) => {
-    const carpeta = req.params.folder
+    const list_files = {}
 
     const load_path = async (path) => {
-        const files = await promises.readdir(path)
-        const list_files = {}
+        const stats = await promises.stat(path)
 
-        for (item of files) {
-            if (item == "$RECYCLE.BIN") {
-                console.log("Skip")
-            } else {
-                const stat = await promises.stat(join(path, item))
+        if (stats.isDirectory()) {
+            
+            const files = await promises.readdir(path);
+            
+            for (item of files) {
+                if (item == "System Volume Information" || item == "$RECYCLE.BIN") { }
 
-                if (stat.isDirectory()) {
+                if (stats.isDirectory()) {
                     list_files[item] = true
                 } else {
                     list_files[item] = false
                 }
             }
-        }
 
-        return list_files
+            return list_files
+        }
     }
 
-    const lista_archivos = await load_path(`D:/${carpeta}`)
+    try {
+        if (iter_folders.length >= 2) {
+            
+            conter += 1
+            
+            iter_folders.pop()
 
-    console.log(lista_archivos)
+            if (conter >= 2) {
+                last_folders = iter_folders[iter_folders.length - 1]
+            } else {
+                last_folders = last_folders.replace(folder_params, "")
+            }
 
-    res.json(lista_archivos)
+            const new_path = iter_folders[iter_folders.length - 1]
+            const list_files = await load_path(new_path)
+
+            await res.json(list_files)
+        } else {
+            last_folders = last_folders.replace(folder_params + "/", "")
+
+            const new_path = iter_folders[iter_folders.length - 1]
+            const list_files = await load_path(new_path)
+
+            await res.json(list_files)
+        }
+    } catch (err) {
+        console.log(err)
+    }
 })
+rutas.get("/cloud/:folder", async (req, res) => {
+
+    folder_params = req.params.folder
+
+    const load_path = async (path) => {
+
+        const status = await promises.stat(path)
+
+        if (status.isDirectory()) {
+
+            const files = await promises.readdir(path)
+            const list_files = {}
+
+            for (item of files) {
+                if (item != "System Volume Information" || item != "$RECYCLE.BIN") {
+                    const stat = await promises.stat(join(path, item))
+
+                    if (stat.isDirectory()) {
+                        list_files[item] = true
+                    } else {
+                        list_files[item] = false
+                    }
+                }
+            }
+            return list_files
+        } else {
+            res.send(folder_params)
+        }
+    }
+
+    try {
+        if (iter_folders.length <= 1) {
+
+
+            last_folders = join(main_path, folder_params)
+            iter_folders.push(last_folders)
+
+            const new_path = iter_folders[iter_folders.length - 1]
+            const list_files = await load_path(new_path)
+
+            await res.json(list_files)
+
+        } else {
+            last_folders = join(last_folders, folder_params)
+
+            iter_folders.push(last_folders)
+
+            const new_path = iter_folders[iter_folders.length - 1]
+            const list_files = await load_path(new_path)
+            await res.json(list_files)
+
+        }
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error: "Hola" })
+    }
+})
+
+rutas.get("/download/:file", (req, res) => {
+    const file = req.params.file; // Obtener el nombre del archivo de la URL
+
+    // Construir la ruta completa del archivo en el servidor
+    const filePath = join(main_path, file);
+
+    // Verificar si el archivo existe
+    if (fs.existsSync(filePath)) {
+        // Enviar el archivo como descarga adjuntándolo a la respuesta
+        res.download(filePath, (error) => {
+            if (error) {
+                console.error(`Error al descargar el archivo ${file}: ${error}`);
+                res.status(500).json({ error: "Error al descargar el archivo" });
+            }
+        });
+    } else {
+        // El archivo no existe
+        console.error(`El archivo ${file} no existe`);
+        res.status(404).json({ error: "Archivo no encontrado" });
+    }
+});
 
 module.exports = rutas
