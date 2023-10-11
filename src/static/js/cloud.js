@@ -1,52 +1,99 @@
+const user_agent = navigator.userAgent
 const cursor = document.getElementById("cursor");
 const all_container = document.querySelectorAll(".container_items");
+const btn_back = document.getElementById("btn_back")
+
+let name_item = ""
+
+const handlerCLickButton = async (e) => {
+    await fetch("/back", {
+        method: "GET"
+    }).then(response => response.json())
+        .then(data => {
+            const name_files = Object.keys(data)
+            const status_files = Object.values(data)
+
+            const main_cloud = document.querySelector(".main_cloud")
+            main_cloud.innerHTML = ""
+
+            name_files.forEach((item, index) => {
+                const container_elements = createElementContainer(item, status_files[index]);
+                container_elements.addEventListener("click", handlerClickContainer);
+                main_cloud.appendChild(container_elements)
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+function createElementContainer(item, status) {
+
+    const elementContainer = document.createElement("div");
+    elementContainer.classList = "container_items";
+
+    const fileImage = document.createElement("img");
+    fileImage.src = status ? "items/folder.png" : "items/files.png";
+    fileImage.id = "imagenes";
+
+    const liName = document.createElement("li");
+    liName.style.cssText = "display:flex; align-items: center; justify-content: center;"
+    liName.textContent = item;
+
+    elementContainer.appendChild(fileImage);
+    elementContainer.appendChild(liName);
+
+    return elementContainer;
+
+}
+
+const handlerClickContainer = async (e) => {
+    const data_li = e.target.closest(".container_items").querySelector("li").textContent;
+
+    await fetch(`/cloud/${encodeURIComponent(data_li)}`, {
+        method: "GET"
+    })
+        .then(response => response.json())
+        .then(data => {
+            const names_files = Object.keys(data)
+            const status_files = Object.values(data)
+            const main_cloud = document.querySelector(".main_cloud");
+            main_cloud.innerHTML = "";
+
+            names_files.forEach(async (item, index) => {
+                const container_elements = createElementContainer(item, status_files[index]);
+                container_elements.addEventListener("click", handlerClickContainer);
+                main_cloud.appendChild(container_elements)
+
+                name_item = item
+            })
+        })
+        .catch(error => console.log(error))
+
+        // await fetch(`/download/${encodeURIComponent(name_item)}`, {
+        //     method: "Get"
+        // }).then(response => response.json())
+        //     .then(data => console.log(data))
+        //     .catch(err => console.log(err))
+}
 
 all_container.forEach((elemento) => {
-    elemento.addEventListener("click", async (event) => {
-        const data_li = event.target.closest(".container_items").querySelector("li").textContent;
+    elemento.addEventListener("click", handlerClickContainer)
+})
 
-        let last_index = data_li.lastIndexOf(".");
-        let extension = data_li.slice(last_index);
+btn_back.addEventListener("click", handlerCLickButton)
 
-        if (extension === ".txt") {
-            // Me falta esto
-        } else {
-            try {
-                const response = await fetch(`/cloud/${encodeURIComponent(data_li)}`, {
-                    method: "GET",
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    const names_files = Object.keys(data);
-                    const status_files = Object.values(data);
+if (user_agent.match(/Android/i) || user_agent.match(/iPhone/i)) {
+    const img = document.querySelectorAll("#imagenes")
+    img.forEach((e) => {
+        e.style.cssText = "width: 100px; height: 100px;"
+    })
+    const main_cloud = document.querySelector(".main_cloud")
+    main_cloud.style.cssText = "flex-direction: column;"
 
-                    const mainCloudElement = document.querySelector(".main_cloud");
-                    mainCloudElement.innerHTML = ""; // Vaciar el contenedor principal
-
-                    names_files.forEach((item, index) => {
-                        const containerElement = document.createElement("div");
-                        containerElement.classList.add("container_items");
-
-                        const imgElement = document.createElement("img");
-                        imgElement.src = status_files[index] ? "items/folder.png" : "items/txt.png";
-
-                        const liElement = document.createElement("li");
-                        liElement.textContent = item;
-
-                        containerElement.appendChild(imgElement);
-                        containerElement.appendChild(liElement);
-
-                        mainCloudElement.appendChild(containerElement);
-                    });
-                } else {
-                    throw new Error("Error obteniendo lista de archivos");
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    });
-});
+    btn_back.style.cssText = `
+        top: 2px;
+        left: 5px;
+    `
+}
 
 document.addEventListener("mousemove", async (e) => {
     const posX = e.clientX;
