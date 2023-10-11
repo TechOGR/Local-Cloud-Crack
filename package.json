@@ -17,7 +17,8 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pack": "electron-builder"
+    "pack": "electron-builder",
+    "build": "npx electron-builder --win"
   },
   "keywords": [],
   "author": "",
