@@ -9,26 +9,25 @@
     <title><%- title %></title>
   </head>
   <body>
-    <div id="cursor"></div>
+    <!-- <div id="cursor"></div> -->
     <div id="content_h1">
       <h1 id="page_title">FileDownloadExplorer</h1>
     </div>
+    <button id="btn_back">⬅️</button>
     <main class="main_cloud">
       <% let keys = Object.keys(list_files); let values =
-      Object.values(list_files); %>
-      <% for( let i = 0; i < keys.length; i++ ) { %>
-      <% if (values[i] == true) { %>
-       <div class="container_items">
-        <img src="items/folder.png" alt="">
+      Object.values(list_files); %> <% for( let i = 0; i < keys.length; i++ ) {
+      %> <% if (values[i] == true) { %>
+      <div class="container_items">
+        <img src="items/folder.png" alt="" id="imagenes" />
         <li class="itmes"><%= keys[i]%></li>
-       </div>
+      </div>
       <% } else { %>
-        <div class="container_items">
-          <img src="items/txt.png" alt="">
-          <li><%= keys[i]%></li>
-         </div>
-      <% } %>
-      <% } %>
+      <div class="container_items">
+        <img src="items/txt.png" alt="" id="imagenes" />
+        <li><%= keys[i]%></li>
+      </div>
+      <% } %> <% } %>
     </main>
 
     <%- include("./partials/footer.ejs") %>
