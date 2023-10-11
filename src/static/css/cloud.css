@@ -14,7 +14,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-    cursor: none;
+    /* cursor: none; */
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     overflow: hidden;
@@ -71,6 +71,7 @@ body:hover #cursor {
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+    animation: change_color 3s linear infinite;
 }
 
 .container_items {
@@ -81,12 +82,18 @@ body:hover #cursor {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    cursor: pointer;
 }
-img {
-    position:relative;
+
+#imagenes {
+    position: relative;
     width: 100px;
     height: 100px;
+    transition: all .2s linear;
+}
 
+#imagenes:hover {
+    transform: translateY(-10px);
 }
 
 li {
@@ -94,7 +101,7 @@ li {
     margin-top: 10px;
     font-family: "Arial Rounded MT";
     font-size: 20px;
-    background: radial-gradient(rgb(194, 0, 161), #000, #0f0f00);
+    background: radial-gradient(rgb(194, 0, 161), #3d0b0b, #4e1039);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -132,4 +139,40 @@ li::selection {
     transition: opacity .5s;
     pointer-events: none;
     z-index: 2;
+}
+
+#btn_back {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    top: 0;
+    left: 0;
+    font-size: 30px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+@keyframes change_color {
+    0% {
+        background: linear-gradient(to bottom right, rgb(255, 0, 179), #000, rgb(255, 0, 34));
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    50% {
+        background: linear-gradient(to bottom right, #000, rgb(255, 0, 34), rgb(255, 0, 179));
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    100% {
+        background: linear-gradient(to bottom right, rgb(255, 0, 34), rgb(255, 0, 179), #000);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+    }
 }
