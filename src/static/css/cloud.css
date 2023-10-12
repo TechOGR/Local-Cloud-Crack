@@ -101,13 +101,15 @@ li {
     margin-top: 10px;
     font-family: "Arial Rounded MT";
     font-size: 20px;
-    background: radial-gradient(rgb(194, 0, 161), #3d0b0b, #4e1039);
+    font-weight: bold;
+    /* background: linear-gradient(to top, rgb(255, 0, 0), black, rgb(255, 0, 55)); */
+    background-color: #000;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
     list-style: none;
     text-align: center;
-    text-shadow: 0 0 5px #000;
+    text-shadow: 0 0 2px #000;
     z-index: -1;
 }
 
