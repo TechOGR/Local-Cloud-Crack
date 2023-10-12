@@ -6,18 +6,15 @@ all_img.forEach((elemento) => {
 
     const function_post = async (name_class) => {
 
-        await fetch("/open_link", {
+        const response = await fetch("/open_link", {
             method: "POST",
             headers: {
                 "Content-Type": 'application/json'
             },
             body: JSON.stringify({ link: name_class })
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-            })
-            .catch(error => console.log(error))
+        const data = await response.json()
+        console.log(data)
     }
 
     elemento.addEventListener("click", (event) => {
