@@ -5,7 +5,6 @@ const { shell } = require("electron")
 const { json } = require("express")
 const multer = require("multer")
 const fs = require("fs")
-const ejs = require("ejs")
 
 const rutas = new Router();
 
@@ -201,9 +200,9 @@ rutas.get("/back", async (req, res) => {
         const stats = await promises.stat(path)
 
         if (stats.isDirectory()) {
-            
+
             const files = await promises.readdir(path);
-            
+
             for (item of files) {
                 if (item == "System Volume Information" || item == "$RECYCLE.BIN") { }
 
@@ -220,9 +219,9 @@ rutas.get("/back", async (req, res) => {
 
     try {
         if (iter_folders.length >= 2) {
-            
+
             conter += 1
-            
+
             iter_folders.pop()
 
             if (conter >= 2) {
@@ -272,8 +271,6 @@ rutas.get("/cloud/:folder", async (req, res) => {
                 }
             }
             return list_files
-        } else {
-            res.send(folder_params)
         }
     }
 
@@ -306,26 +303,24 @@ rutas.get("/cloud/:folder", async (req, res) => {
     }
 })
 
-rutas.get("/download/:file", (req, res) => {
-    const file = req.params.file; // Obtener el nombre del archivo de la URL
-
-    // Construir la ruta completa del archivo en el servidor
-    const filePath = join(main_path, file);
-
-    // Verificar si el archivo existe
-    if (fs.existsSync(filePath)) {
-        // Enviar el archivo como descarga adjuntándolo a la respuesta
-        res.download(filePath, (error) => {
-            if (error) {
-                console.error(`Error al descargar el archivo ${file}: ${error}`);
-                res.status(500).json({ error: "Error al descargar el archivo" });
-            }
-        });
-    } else {
-        // El archivo no existe
-        console.error(`El archivo ${file} no existe`);
-        res.status(404).json({ error: "Archivo no encontrado" });
-    }
+rutas.get("/download/:file", async (req, res) => {
+    const file = req.params.file;
+    const filePath = join(iter_folders[iter_folders.length - 1], file);
+    console.log(iter_folders, file,filePath)
+    // Verificando si el archivo existe
+    fs.stat(filePath, async (err, stats) => {
+        if (err || !stats.isFile()) {
+            console.error(`Error al verificar la existencia del archivo ${filePath}: ${err}`);
+            await res.status(500).json({ error: "Error al descargar el archivo" });
+        } else {
+            await res.download(filePath, (error) => {
+                if (error) {
+                    console.error(`Error al descargar el archivo ${file}: ${error}`);
+                    res.status(500).json({ error: "Error al descargar el archivo" });
+                }
+            });
+        }
+    });
 });
 
 module.exports = rutas

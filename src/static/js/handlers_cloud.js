@@ -1,5 +1,4 @@
-function createElementContainer(item, status) {
-
+const createElementContainer = (item, status) => {
     const elementContainer = document.createElement("div");
     elementContainer.classList = "container_items";
 
@@ -14,8 +13,18 @@ function createElementContainer(item, status) {
     elementContainer.appendChild(fileImage);
     elementContainer.appendChild(liName);
 
-    return elementContainer;
+    // Agregar event listener al contenedor de elementos
+    elementContainer.addEventListener("click", (e) => {
+        if (!status) {
+            alert(item)
+            const downloadLink = document.createElement("a");
+            downloadLink.href = `/download/${encodeURIComponent(item)}`;
+            downloadLink.download = item;
+            downloadLink.click();
+        }
+    });
 
+    return elementContainer;
 }
 
 const handlerCLickButton = async (e) => {
@@ -60,4 +69,4 @@ const handlerClickContainer = async (e) => {
         .catch(error => console.log(error))
 }
 
-export default {handlerCLickButton, handlerClickContainer}
+export default { handlerCLickButton, handlerClickContainer }
