@@ -22,6 +22,7 @@ npm install
 * multer v1.4.5-lts.1
 * qrcode v1.5.3
 * ejs v3.1.9
+* mime-types v2.1.35
 ### Dev-Dependencies
 * electron v25.3.2
 * electron-builder v24.6.3
@@ -33,3 +34,11 @@ npm install
 
 # Video Explicativo en YouTube
 [Coming...]()
+
+# Capturas de Pantalla
+<p align="center">
+    <img src="/src/static/img/capturas/screenshoot_1.png" widht="200px" height="400px">
+    <img src="/src/static/img/capturas/screenshoot_2.png" widht="200px" height="400px">
+    <img src="/src/static/img/capturas/screenshoot_3.png" widht="200px" height="400px">
+    <img src="/src/static/img/capturas/screenshoot_4.png" widht="200px" height="400px">
+</p>
