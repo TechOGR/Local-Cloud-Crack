@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Set Main Path</title>
+  </head>
+  <body bgcolor="red">
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #181818;
+      }
+      div {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      input {
+        background: #242424;
+        color: white;
+        font-family: system-ui;
+        text-align: center;
+      }
+      input::placeholder {
+        color: red;
+        text-shadow: 0 0 10px red;
+      }
+      button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 30px;
+        margin-top: 10px;
+        background: #252525;
+        color: white;
+        box-shadow: 0 0 5px black;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+    </style>
+    <div>
+      <input
+        type="url"
+        id="input_MainPath"
+        placeholder="Paste Here your Path"
+      />
+      <button id="btn_set_path">Set</button>
+    </div>
+  </body>
+  <script>
+    const btn_set = document.getElementById("btn_set_path");
+    const input_path = document.getElementById("input_MainPath");
+    btn_set.addEventListener("click", async (e) => {
+      async function post(path) {
+        await fetch("/set_dir", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ path }),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((error) => console.log(error));
+      }
+      const path_dir = input_path.value;
+      await post(path_dir);
+    });
+  </script>
+</html>

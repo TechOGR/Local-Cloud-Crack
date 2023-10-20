@@ -6,7 +6,6 @@ const express = require("express")
 const rutas = require("./routes/routes.js")
 const user_agent = require("express-useragent")
 const favicon = require("serve-favicon")
-
 const port = 8585
 
 app_exp = express()
@@ -53,13 +52,17 @@ const createWindow = () => {
                 {
                     label: "Download",
                     click: async () => {
-                        await win.loadURL(`http://localhost:${port}/cloud`)
+                        try {
+                            await win.loadURL(`http://localhost:${port}/cloud`)
+                        } catch (err) {
+                            console.log("Error en la URL")
+                        }
                     }
                 },
                 {
                     label: "Set Path",
                     click: async () => {
-                        new BrowserWindow({
+                        const esto = new BrowserWindow({
                             width: 300,
                             height: 120,
                             title: "Write Path Here",
@@ -68,6 +71,7 @@ const createWindow = () => {
                             resizable: false,
                             icon: path_icon_app
                         })
+                        await esto.loadURL(`http://localhost:${port}/set_dir_face`)
                     }
                 }
             ]

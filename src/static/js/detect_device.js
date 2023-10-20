@@ -2,7 +2,6 @@ const user_agent = navigator.userAgent
 
 const footer = document.querySelector("footer")
 const main_content_index = document.querySelector(".main_content")
-
 const all_links = {
     youtube: "https://www.youtube.com/@OnelCrack",
     facebook: "https://www.facebook.com/profile.php?id=100092376152191",
@@ -18,7 +17,7 @@ const twitter = document.getElementById("twitter");
 const github = document.getElementById("github");
 
 if (user_agent.match(/Android/i) || user_agent.match(/iPhone/i)) {
-    footer.style.cssText = "top: 80vh";
+    footer.style.cssText = "top: 83vh";
     main_content_index.style.cssText = "height: 80vh";
 
     instagram.addEventListener("click", (event) => {

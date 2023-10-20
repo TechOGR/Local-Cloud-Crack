@@ -23,11 +23,9 @@ all_img.forEach((elemento) => {
         const fileter_name = name_to_send[1]
 
         if (navigator_user_agent.match(/Android/i) || navigator_user_agent.match(/iPhone/i)) {
-
         } else {
             function_post(fileter_name)
         }
-
     })
 
 })

@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="cloud.css" />
-    <script defer type="module" src="cloud.js"></script>
     <script defer src="open_links.js"></script>
+    <script defer src="detect_device.js"></script>
+    <script defer type="module" src="cloud.js"></script>
     <title><%- title %></title>
   </head>
   <body>
@@ -15,19 +16,20 @@
     </div>
     <button id="btn_back">⬅️</button>
     <main class="main_cloud">
-      <% let keys = Object.keys(list_files); let values =
-      Object.values(list_files); %> <% for( let i = 0; i < keys.length; i++ ) {
-      %> <% if (values[i] == true) { %>
-      <div class="container_items">
-        <img src="items/folder.png" alt="" id="imagenes" />
-        <li class="itmes"><%= keys[i]%></li>
-      </div>
-      <% } else { %>
-      <div class="container_items">
-        <img src="items/txt.png" alt="" id="imagenes" />
-        <li><%= keys[i]%></li>
-      </div>
-      <% } %> <% } %>
+      
+      <% for( let i = 0; i < list_files.length; i++ ) { %>
+        <% if (list_files[i].isFolder == true) { %>
+          <div class="container_items">
+            <img src="items/folder.png" alt="" id="imagenes" />
+            <li class="name_item"><%= list_files[i].name %></li>
+          </div>
+        <% } else { %>
+        <div class="container_items">
+          <img src="items/<%= list_files[i].type %>.png" alt="" id="imagenes" />
+          <li class="name_item"><%= list_files[i].name %></li>
+        </div>
+        <% } %>
+      <% } %>
     </main>
 
     <%- include("./partials/footer.ejs") %>

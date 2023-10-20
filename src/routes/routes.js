@@ -1,12 +1,15 @@
 const { Router } = require("express")
 const { join, extname } = require("path")
+const { exec } = require("child_process")
 const { promises } = require("fs")
 const { shell } = require("electron")
 const { json } = require("express")
 const multer = require("multer")
 const fs = require("fs")
-
+const os = require("os")
+const mimeType = require("mime-types")
 const rutas = new Router();
+
 
 rutas.use(json())
 
@@ -148,7 +151,48 @@ rutas.post("/open_link", async (req, res) => {
     await res.status(200).json({ sms: "All ok" })
 })
 
-const main_path = "D:/"
+let main_path = ""
+const file_log = join(os.homedir(), "log.txt")
+
+const func_file_log = (dir = "D:/") => {
+    fs.access(file_log, fs.constants.F_OK, (error) => {
+        if (error) {
+
+            fs.writeFile(file_log, dir, 'utf8', (error) => {
+                if (error) {
+                    console.error('Error al crear el archivo:', error);
+                } else {
+                    console.log('Archivo creado exitosamente');
+                }
+            });
+        } else {
+            fs.readFile(file_log, "utf-8", (err, data) => {
+                if (err) console.log(err)
+
+                main_path = data.trim()
+
+                fs.writeFile(file_log, dir, 'utf8', (error) => {
+                    if (error) {
+                        console.error('Error al reemplazar el contenido del archivo:', error);
+                    } else {
+                        console.log('Se remplazo');
+                    }
+                });
+            })
+
+        }
+    });
+}
+func_file_log()
+
+rutas.get("/set_dir_face", async (req, res) => {
+    await res.render("setPath.ejs");
+})
+rutas.post("/set_dir", async (req, res) => {
+    const path = req.body.path
+    func_file_log(path)
+    main_path = path
+})
 let iter_folders = [main_path]
 let last_folders = ""
 let conter = 0
@@ -157,44 +201,91 @@ rutas.get("/cloud", async (req, res) => {
 
     const load_files = async (path) => {
         try {
-
             const files = await promises.readdir(path)
-            const files_list = {}
+            const array_objects = []
 
             for (item of files) {
-                if (item == "System Volume Information" || item == "$RECYCLE.BIN") { }
-                else {
+                if (
+                    item == "System Volume Information" ||
+                    item == "$RECYCLE.BIN" ||
+                    item == "DumpStack.log.tmp" ||
+                    item == "pagefile.sys"
+                ) { continue }
+                const stat = await promises.stat(join(path, item))
+                if (stat.isDirectory()) {
+                    array_objects.push({
+                        "name": item,
+                        "isFolder": true,
+                        "type": "Folder"
+                    })
+                } else {
+                    let tipo = "file"
+                    const mime_type = mimeType.lookup(join(path, item));
+                    console.log("_____" + mime_type + "_____")
+                    try {
+                        if (mime_type.startsWith('video')) {
+                            tipo = "video"
+                        } else if (mime_type.startsWith('image')) {
+                            tipo = "imagen"
+                        } else if (mime_type.startsWith('audio')) {
+                            tipo = "music"
+                        } else if (
+                            mime_type.endsWith("vnd.android.package-archive") ||
+                            mime_type.endsWith("vnd.android.package-archive")
+                        ) {
+                            tipo = "apk"
+                        } else if (mime_type.endsWith("x-msdownload")) {
 
-                    const stat = await promises.stat(join(path, item))
-
-                    if (stat.isDirectory()) {
-                        files_list[item] = true
-                    } else {
-                        files_list[item] = false
+                        } else if (mime_type.startsWith("text")) {
+                            tipo = "file_text"
+                        } else if (mime_type.endsWith("x-msdos-program")) {
+                            tipo = "exe"
+                        } else if (
+                            mime_type.endsWith("zip") ||
+                            mime_type.endsWith("x-tar") ||
+                            mime_type.endsWith("x-7z-compressed") ||
+                            mime_type.endsWith("rar") ||
+                            mime_type.endsWith("vbox-extpack") ||
+                            mime_type.endsWith("octet-stream") ||
+                            mime_type.endsWith("x-tar")
+                        ) {
+                            tipo = "compress"
+                        } else if (mime_type.endsWith("pdf")) {
+                            tipo = "pdf"
+                        } else {
+                            tipo = "files"
+                        }
+                    } catch (err) {
+                        console.log(err)
                     }
+                    array_objects.push({
+                        "name": item,
+                        "isFolder": false,
+                        "type": tipo
+                    })
                 }
             }
-
-            return files_list
+            return array_objects
 
         } catch (err) {
             console.log(err)
         }
     }
-    const path = `D:/`
-    const object_files = await load_files(path)
-    last_folders = ""
-    iter_folders = [path]
 
+    const object_files = await load_files(main_path)
+    last_folders = ""
+    iter_folders = [main_path]
     await res.render("cloud.ejs", {
         title: "Local-Cloud-Crack",
         list_files: object_files
     })
 })
+
 let folder_params = ""
+
 rutas.get("/back", async (req, res) => {
 
-    const list_files = {}
+    const array_objects = []
 
     const load_path = async (path) => {
         const stats = await promises.stat(path)
@@ -204,16 +295,69 @@ rutas.get("/back", async (req, res) => {
             const files = await promises.readdir(path);
 
             for (item of files) {
-                if (item == "System Volume Information" || item == "$RECYCLE.BIN") { }
+                if (
+                    item == "System Volume Information" ||
+                    item == "$RECYCLE.BIN" ||
+                    item == "DumpStack.log.tmp" ||
+                    item == "pagefile.sys"
+                ) { continue }
+                else {
+                    const stat = await promises.stat(join(path, item))
+                    if (stat.isDirectory()) {
+                        array_objects.push({
+                            "name": item,
+                            "isFolder": true,
+                            "type": "Folder"
+                        })
+                    } else {
+                        let tipo = "file"
+                        const mime_type = mimeType.lookup(join(path, item));
+                        console.log("_____" + mime_type + "_____")
+                        try {
+                            if (mime_type.startsWith('video')) {
+                                tipo = "video"
+                            } else if (mime_type.startsWith('image')) {
+                                tipo = "imagen"
+                            } else if (mime_type.startsWith('audio')) {
+                                tipo = "music"
+                            } else if (
+                                mime_type.endsWith("vnd.android.package-archive") ||
+                                mime_type.endsWith("vnd.android.package-archive")
+                            ) {
+                                tipo = "apk"
+                            } else if (mime_type.endsWith("x-msdownload")) {
 
-                if (stats.isDirectory()) {
-                    list_files[item] = true
-                } else {
-                    list_files[item] = false
+                            } else if (mime_type.startsWith("text")) {
+                                tipo = "file_text"
+                            } else if (mime_type.endsWith("x-msdos-program")) {
+                                tipo = "exe"
+                            } else if (
+                                mime_type.endsWith("zip") ||
+                                mime_type.endsWith("x-tar") ||
+                                mime_type.endsWith("x-7z-compressed") ||
+                                mime_type.endsWith("rar") ||
+                                mime_type.endsWith("vbox-extpack") ||
+                                mime_type.endsWith("octet-stream") ||
+                                mime_type.endsWith("x-tar")
+                            ) {
+                                tipo = "compress"
+                            } else if (mime_type.endsWith("pdf")) {
+                                tipo = "pdf"
+                            } else {
+                                tipo = "files"
+                            }
+                        } catch (err) {
+                            console.log(err)
+                        }
+                        array_objects.push({
+                            "name": item,
+                            "isFolder": false,
+                            "type": tipo
+                        })
+                    }
                 }
             }
-
-            return list_files
+            return array_objects
         }
     }
 
@@ -221,7 +365,7 @@ rutas.get("/back", async (req, res) => {
         if (iter_folders.length >= 2) {
 
             conter += 1
-
+            console.log(iter_folders, conter)
             iter_folders.pop()
 
             if (conter >= 2) {
@@ -249,44 +393,98 @@ rutas.get("/back", async (req, res) => {
 rutas.get("/cloud/:folder", async (req, res) => {
 
     folder_params = req.params.folder
-
+    console.log(`<<<< Parametro: ${folder_params}>>>`)
     const load_path = async (path) => {
 
         const status = await promises.stat(path)
-
+        console.log(path)
         if (status.isDirectory()) {
 
             const files = await promises.readdir(path)
-            const list_files = {}
+            const array_objects = []
 
             for (item of files) {
-                if (item != "System Volume Information" || item != "$RECYCLE.BIN") {
+                if (
+                    item == "System Volume Information" ||
+                    item == "$RECYCLE.BIN" ||
+                    item == "DumpStack.log.tmp" ||
+                    item == "pagefile.sys"
+                ) { continue }
+                else {
                     const stat = await promises.stat(join(path, item))
-
                     if (stat.isDirectory()) {
-                        list_files[item] = true
+                        array_objects.push({
+                            "name": item,
+                            "isFolder": true,
+                            "type": "Folder"
+                        })
                     } else {
-                        list_files[item] = false
+                        let tipo = "file"
+                        const mime_type = mimeType.lookup(join(path, item));
+                        console.log("_____" + mime_type + "_____")
+                        try {
+                            if (mime_type.startsWith('video')) {
+                                tipo = "video"
+                            } else if (mime_type.startsWith('image')) {
+                                tipo = "imagen"
+                            } else if (mime_type.startsWith('audio')) {
+                                tipo = "music"
+                            } else if (
+                                mime_type.endsWith("vnd.android.package-archive") ||
+                                mime_type.endsWith("vnd.android.package-archive")
+                            ) {
+                                tipo = "apk"
+                            } else if (mime_type.endsWith("x-msdownload")) {
+
+                            } else if (mime_type.startsWith("text")) {
+                                tipo = "file_text"
+                            } else if (mime_type.endsWith("x-msdos-program")) {
+                                tipo = "exe"
+                            } else if (
+                                mime_type.endsWith("zip") ||
+                                mime_type.endsWith("x-tar") ||
+                                mime_type.endsWith("x-7z-compressed") ||
+                                mime_type.endsWith("rar") ||
+                                mime_type.endsWith("vbox-extpack") ||
+                                mime_type.endsWith("octet-stream") ||
+                                mime_type.endsWith("x-tar")
+                            ) {
+                                tipo = "compress"
+                            } else if (mime_type.endsWith("pdf")) {
+                                tipo = "pdf"
+                            } else {
+                                tipo = "files"
+                            }
+                        } catch (err) {
+                            console.log(err)
+                        }
+                        array_objects.push({
+                            "name": item,
+                            "isFolder": false,
+                            "type": tipo
+                        })
                     }
                 }
             }
-            return list_files
+            return array_objects
         }
     }
 
     try {
-        if (iter_folders.length <= 1) {
 
+        if (iter_folders.length <= 1) {
 
             last_folders = join(main_path, folder_params)
             iter_folders.push(last_folders)
 
             const new_path = iter_folders[iter_folders.length - 1]
+
             const list_files = await load_path(new_path)
 
             await res.json(list_files)
 
         } else {
+
             last_folders = join(last_folders, folder_params)
 
             iter_folders.push(last_folders)
@@ -305,20 +503,20 @@ rutas.get("/cloud/:folder", async (req, res) => {
 
 rutas.get("/download/:file", async (req, res) => {
     const file = req.params.file;
-    const filePath = join(iter_folders[iter_folders.length - 1], file);
-    console.log(iter_folders, file,filePath)
-    // Verificando si el archivo existe
-    fs.stat(filePath, async (err, stats) => {
-        if (err || !stats.isFile()) {
-            console.error(`Error al verificar la existencia del archivo ${filePath}: ${err}`);
-            await res.status(500).json({ error: "Error al descargar el archivo" });
-        } else {
-            await res.download(filePath, (error) => {
-                if (error) {
-                    console.error(`Error al descargar el archivo ${file}: ${error}`);
-                    res.status(500).json({ error: "Error al descargar el archivo" });
-                }
-            });
+
+    
+    let filePath = join(iter_folders[iter_folders.length - 1]);
+    console.log(filePath)
+    if (filePath.endsWith(file)){
+        filePath = join(iter_folders[iter_folders.length - 1]);
+    } else {
+        filePath = join(iter_folders[iter_folders.length - 1], file);
+    }
+
+    await res.download(filePath, (error) => {
+        if (error) {
+            console.error(`Error al descargar el archivo ${file}: ${error}`);
+            res.status(500).json({ error: "Error al descargar el archivo" });
         }
     });
 });

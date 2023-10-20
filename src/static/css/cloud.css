@@ -21,10 +21,6 @@ body {
     z-index: -1;
 }
 
-body:hover #cursor {
-    opacity: 1;
-}
-
 .main_cloud {
     position: relative;
     top: 20px;
@@ -76,7 +72,7 @@ body:hover #cursor {
 
 .container_items {
     position: relative;
-    width: 200px;
+    width: 250px;
     height: 200px;
     display: flex;
     align-items: center;
@@ -85,62 +81,38 @@ body:hover #cursor {
     cursor: pointer;
 }
 
-#imagenes {
+.container_items #imagenes {
     position: relative;
     width: 100px;
     height: 100px;
     transition: all .2s linear;
 }
 
-#imagenes:hover {
+.container_items #imagenes:hover {
     transform: translateY(-10px);
 }
 
-li {
+.container_items .name_item {
     position: relative;
-    margin-top: 10px;
     font-family: "Arial Rounded MT";
     font-size: 20px;
     font-weight: bold;
-    /* background: linear-gradient(to top, rgb(255, 0, 0), black, rgb(255, 0, 55)); */
-    background-color: #000;
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: rgb(0, 0, 0);
+    text-shadow: 0 0 5px white;
     list-style: none;
     text-align: center;
     text-shadow: 0 0 2px #000;
     z-index: -1;
 }
 
-li:hover {
+.container_items .name_item:hover {
     text-shadow: 0 0 5px black,
         0 0 10px black;
 }
 
-li::selection {
+.container_items .name_item::selection {
     background: none;
     color: transparent;
-}
-
-#cursor {
-    position: fixed;
-    display: inline;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: black;
-    box-shadow: 0 0 5px black,
-        0 0 15px black,
-        0 0 25px black,
-        0 0 50px black,
-        0 0 60px black;
-    opacity: 0;
-    transition: opacity .5s;
-    pointer-events: none;
-    z-index: 2;
 }
 
 #btn_back {
