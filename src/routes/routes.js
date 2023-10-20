@@ -317,7 +317,7 @@ rutas.get("/back", async (req, res) => {
                             if (mime_type.startsWith('video')) {
                                 tipo = "video"
                             } else if (mime_type.startsWith('image')) {
-                                tipo = "imagen"
+                                tipo = "image"
                             } else if (mime_type.startsWith('audio')) {
                                 tipo = "music"
                             } else if (
@@ -426,7 +426,7 @@ rutas.get("/cloud/:folder", async (req, res) => {
                             if (mime_type.startsWith('video')) {
                                 tipo = "video"
                             } else if (mime_type.startsWith('image')) {
-                                tipo = "imagen"
+                                tipo = "image"
                             } else if (mime_type.startsWith('audio')) {
                                 tipo = "music"
                             } else if (
