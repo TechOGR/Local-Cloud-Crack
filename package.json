@@ -1,6 +1,6 @@
 {
-  "name": "up_local_cloud_down",
-  "version": "1.0.0",
+  "name": "UpDown_Files",
+  "version": "1.5.1",
   "description": "Software para subir archivos",
   "main": "src/main.js",
   "build": {

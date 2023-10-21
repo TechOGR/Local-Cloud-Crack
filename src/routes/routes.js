@@ -283,6 +283,70 @@ rutas.get("/cloud", async (req, res) => {
 
 let folder_params = ""
 
+// Checking MimeTypes
+const checkMimeTypes = (path, item) => {
+    let tipo = "file"
+    const mime_type = mimeType.lookup(join(path, item));
+
+    console.log("_<" + mime_type + ">_")
+    try {
+        if (typeof mime_type !== "boolean") {
+            if (mime_type.startsWith('video')) {
+                tipo = "video"
+            } else if (mime_type.endsWith("msword")) {
+                tipo = "doc"
+            } else if (mime_type.endsWith("x-iso9660-image")) {
+                tipo = "iso-file"
+            } else if (mime_type.endsWith("javascript")) {
+                tipo = "js-file"
+            } else if (mime_type.endsWith("jsx")) {
+                tipo = "react"
+            } else if (mime_type.endsWith("json")) {
+                tipo = "json"
+            } else if (mime_type.startsWith('image')) {
+                tipo = "image"
+            } else if (mime_type.startsWith('audio')) {
+                tipo = "music"
+            } else if (
+                mime_type.endsWith("vnd.android.package-archive") ||
+                mime_type.endsWith("vnd.android.package-archive")
+            ) {
+                tipo = "apk"
+            } else if (mime_type.endsWith("x-msdownload")) {
+
+            } else if (mime_type.startsWith("text")) {
+                tipo = "file_text"
+            } else if (mime_type.endsWith("x-msdos-program")) {
+                tipo = "exe"
+            } else if (
+                mime_type.endsWith("zip") ||
+                mime_type.endsWith("x-tar") ||
+                mime_type.endsWith("x-7z-compressed") ||
+                mime_type.endsWith("rar") ||
+                mime_type.endsWith("vbox-extpack") ||
+                mime_type.endsWith("octet-stream") ||
+                mime_type.endsWith("x-tar")
+            ) {
+                tipo = "compress"
+            } else if (mime_type.endsWith("pdf")) {
+                tipo = "pdf"
+            } else {
+                tipo = "files"
+            }
+        } else {
+            const extension = extname(join(path, item))
+            if (extension == ".py") {
+                tipo = "python"
+            } else {
+                tipo = "files"
+            }
+        }
+        return tipo
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 rutas.get("/back", async (req, res) => {
 
     const array_objects = []
@@ -310,45 +374,7 @@ rutas.get("/back", async (req, res) => {
                             "type": "Folder"
                         })
                     } else {
-                        let tipo = "file"
-                        const mime_type = mimeType.lookup(join(path, item));
-                        console.log("_____" + mime_type + "_____")
-                        try {
-                            if (mime_type.startsWith('video')) {
-                                tipo = "video"
-                            } else if (mime_type.startsWith('image')) {
-                                tipo = "image"
-                            } else if (mime_type.startsWith('audio')) {
-                                tipo = "music"
-                            } else if (
-                                mime_type.endsWith("vnd.android.package-archive") ||
-                                mime_type.endsWith("vnd.android.package-archive")
-                            ) {
-                                tipo = "apk"
-                            } else if (mime_type.endsWith("x-msdownload")) {
-
-                            } else if (mime_type.startsWith("text")) {
-                                tipo = "file_text"
-                            } else if (mime_type.endsWith("x-msdos-program")) {
-                                tipo = "exe"
-                            } else if (
-                                mime_type.endsWith("zip") ||
-                                mime_type.endsWith("x-tar") ||
-                                mime_type.endsWith("x-7z-compressed") ||
-                                mime_type.endsWith("rar") ||
-                                mime_type.endsWith("vbox-extpack") ||
-                                mime_type.endsWith("octet-stream") ||
-                                mime_type.endsWith("x-tar")
-                            ) {
-                                tipo = "compress"
-                            } else if (mime_type.endsWith("pdf")) {
-                                tipo = "pdf"
-                            } else {
-                                tipo = "files"
-                            }
-                        } catch (err) {
-                            console.log(err)
-                        }
+                        const tipo = checkMimeTypes(path, item)
                         array_objects.push({
                             "name": item,
                             "isFolder": false,
@@ -390,10 +416,11 @@ rutas.get("/back", async (req, res) => {
         console.log(err)
     }
 })
+
 rutas.get("/cloud/:folder", async (req, res) => {
 
     folder_params = req.params.folder
-    console.log(`<<<< Parametro: ${folder_params}>>>`)
+
     const load_path = async (path) => {
 
         const status = await promises.stat(path)
@@ -419,45 +446,7 @@ rutas.get("/cloud/:folder", async (req, res) => {
                             "type": "Folder"
                         })
                     } else {
-                        let tipo = "file"
-                        const mime_type = mimeType.lookup(join(path, item));
-                        console.log("_____" + mime_type + "_____")
-                        try {
-                            if (mime_type.startsWith('video')) {
-                                tipo = "video"
-                            } else if (mime_type.startsWith('image')) {
-                                tipo = "image"
-                            } else if (mime_type.startsWith('audio')) {
-                                tipo = "music"
-                            } else if (
-                                mime_type.endsWith("vnd.android.package-archive") ||
-                                mime_type.endsWith("vnd.android.package-archive")
-                            ) {
-                                tipo = "apk"
-                            } else if (mime_type.endsWith("x-msdownload")) {
-
-                            } else if (mime_type.startsWith("text")) {
-                                tipo = "file_text"
-                            } else if (mime_type.endsWith("x-msdos-program")) {
-                                tipo = "exe"
-                            } else if (
-                                mime_type.endsWith("zip") ||
-                                mime_type.endsWith("x-tar") ||
-                                mime_type.endsWith("x-7z-compressed") ||
-                                mime_type.endsWith("rar") ||
-                                mime_type.endsWith("vbox-extpack") ||
-                                mime_type.endsWith("octet-stream") ||
-                                mime_type.endsWith("x-tar")
-                            ) {
-                                tipo = "compress"
-                            } else if (mime_type.endsWith("pdf")) {
-                                tipo = "pdf"
-                            } else {
-                                tipo = "files"
-                            }
-                        } catch (err) {
-                            console.log(err)
-                        }
+                        const tipo = checkMimeTypes(path, item)
                         array_objects.push({
                             "name": item,
                             "isFolder": false,
@@ -504,21 +493,19 @@ rutas.get("/cloud/:folder", async (req, res) => {
 rutas.get("/download/:file", async (req, res) => {
     const file = req.params.file;
 
-    
+    await res.setHeader("Content-Type", "application/octet-stream")
+
     let filePath = join(iter_folders[iter_folders.length - 1]);
     console.log(filePath)
-    if (filePath.endsWith(file)){
-        filePath = join(iter_folders[iter_folders.length - 1]);
-    } else {
+    if (!filePath.endsWith(file)) {
         filePath = join(iter_folders[iter_folders.length - 1], file);
     }
 
-    await res.download(filePath, (error) => {
-        if (error) {
-            console.error(`Error al descargar el archivo ${file}: ${error}`);
-            res.status(500).json({ error: "Error al descargar el archivo" });
-        }
-    });
+    await res.sendFile(filePath)
+
+    await res.on("aborted", async () => {
+        await res.sendFile(filePath).cancel()
+    })
 });
 
 module.exports = rutas

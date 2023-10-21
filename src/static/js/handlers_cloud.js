@@ -6,6 +6,8 @@ const createElementContainer = (item, status, type) => {
 
 
     const fileImage = document.createElement("img");
+
+
     fileImage.src = status ? "items/folder.png" : `items/${type}.png`;
     fileImage.id = "imagenes";
 
