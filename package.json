@@ -1,11 +1,11 @@
 {
   "name": "UpDown_Files",
-  "version": "1.5.1",
-  "description": "Software para subir archivos",
+  "version": "1.5.5",
+  "description": "Software para subir archivos a su pc y descargarlos igualmente",
   "main": "src/main.js",
   "build": {
     "appId": "com.onel.upload",
-    "productName": "Upload_Files",
+    "productName": "Up-Down-Files",
     "directories": {
       "output": "build"
     },
@@ -21,7 +21,7 @@
     "build": "npx electron-builder --win"
   },
   "keywords": [],
-  "author": "",
+  "author": "Onel Crack",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.9",
@@ -33,7 +33,8 @@
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
-    "electron": "^25.3.2",
+    "@types/serve-favicon": "^2.5.6",
+    "electron": "^25.9.2",
     "electron-builder": "^24.6.3",
     "nodemon": "^3.0.1"
   }

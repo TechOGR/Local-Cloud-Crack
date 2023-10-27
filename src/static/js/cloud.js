@@ -15,7 +15,7 @@ all_container.forEach((elemento) => {
 btn_back.addEventListener("click", handlerCLickButton)
 
 if (user_agent.match(/Android/i) || user_agent.match(/iPhone/i)) {
-        
+
     const img = document.querySelectorAll("#imagenes")
     img.forEach((e) => {
         e.style.cssText = "width: 100px; height: 100px;"

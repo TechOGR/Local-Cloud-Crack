@@ -15,7 +15,7 @@ async function create_new_Qr_Code(ip, port, real_path_qrcode) {
             version: 7,
             scale: 8
         }, (error) => {
-            if (error) throw error;
+            if (error) { console.log(error) };
             exec('msg * Qr-Code Creado :D\nPrecione donde mismo de nuevo para verlo')
         })
     } else {
@@ -36,6 +36,7 @@ async function create_new_Qr_Code(ip, port, real_path_qrcode) {
 }
 
 const ip_wifi = async (path_qr) => {
+    
     const ifaces = networkInterfaces()
 
     try {
@@ -46,8 +47,12 @@ const ip_wifi = async (path_qr) => {
 
         create_new_Qr_Code(wifi_ip, 8585, path_qr)
 
+        return true
     } catch (err) {
+
         exec("msg * No Tienes Wifi :(")
+
+        return false
     }
 
 

@@ -57,7 +57,7 @@ form {
     color: white;
     font-family: "Arial Rounded MT";
     font-size: 16px;
-    width: 250px;
+    width: 65%;
     box-shadow: 0 0 10px rgb(255, 81, 0),
         0 0 10px rgb(255, 81, 0),
         0 0 10px rgb(255, 81, 0),
@@ -133,13 +133,19 @@ form {
 
 .content_text_file {
     width: 100%;
-    height: 50px;
+    height: 85px;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
     margin-bottom: 70px;
-    overflow: hidden;
+    overflow: auto;
+}
+
+.content_text_file::-webkit-scrollbar {
+    background: transparent;
+    width: 10px;
 }
 
 .warn {
@@ -152,13 +158,13 @@ form {
 }
 
 #h1_file_name {
+    margin: 5px;
     text-align: center;
     font-size: 20px;
     font-weight: bold;
     font-family: "Arial Rounded MT";
     color: rgb(0, 0, 0);
     text-shadow: 0 0 10px rgb(255, 81, 0);
-    transition: all 1s linear;
 }
 
 #h1_file_name:hover {
@@ -166,4 +172,90 @@ form {
         0 0 10px rgb(255, 81, 0),
         0 0 10px rgb(255, 81, 0),
         0 0 10px rgb(255, 81, 0);
+    transition: all 1s linear;
+}
+
+#btn_show_files {
+    width: 50%;
+    height: 50px;
+    position: relative;
+    text-align: center;
+    font-family: "Arial Rounded MT";
+    font-size: 23px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: orange;
+    text-shadow: 0 0 3px black;
+    cursor: pointer;
+}
+
+#span_files {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: none;
+    border-radius: 10px;
+    padding-top: 20px;
+    transition: all 1s;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 1);
+    z-index: 5;
+}
+#span_files::-webkit-scrollbar {
+    background-color: rgba(124, 124, 124, 0.3);
+    width: 10px;
+}
+
+#btn_close {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 0;
+    height: 0;
+    transition: all 1s;
+    background: rgb(48, 48, 48);
+    color: white;
+    text-shadow: 0 0 2px white;
+    box-shadow: inset 0 0 rgb(20, 20, 20);
+    border: none;
+    border-radius: 50%;
+    font-family: system-ui;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#container {
+    position: relative;
+    width: 95%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+#container-name {
+    width: 80%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    font-family: "Comic Sans MS";
+    font-size: 15px;
+    color: rgb(255, 0, 0);
+    text-shadow: 0 0 10px rgb(255, 81, 0);
+    text-align: center;
+}
+#container-btn-close {
+    width: 30px;
+    height: 30px;
+    float: right;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: red;
+    color: black;
+    text-shadow: 0 0 2px black;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
 }

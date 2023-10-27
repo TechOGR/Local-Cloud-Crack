@@ -1,15 +1,16 @@
-const { app, BrowserWindow } = require("electron")
-const { Menu } = require("electron")
-const { join } = require("path")
+const { app, Menu, BrowserWindow } = require("electron")
+const { join } = require("path");
 const { ip_wifi, ip_ethernet } = require("./modules/get_ip")
+const {homedir} = require("os")
 const express = require("express")
 const rutas = require("./routes/routes.js")
 const user_agent = require("express-useragent")
 const favicon = require("serve-favicon")
 const port = 8585
-
 app_exp = express()
+
 const path_favicon = join(__dirname, "static", "img", "favicon.ico")
+
 app_exp.setMaxListeners(20)
 app_exp.set("view engine", "ejs")
 app_exp.set("views", join(__dirname, "views"))
@@ -22,15 +23,19 @@ app_exp.use(user_agent.express())
 app_exp.use(rutas)
 
 
+
 const path_icon_app = join(__dirname, "static", "img", "Icon.png")
-// const path_qr_code = join(__dirname, "static", "img", "QR.png") // Dev Qr-Code
-const real_path_qrcode = join('C:', 'Users', `${process.env.USERNAME}`, 'AppData', 'Local', 'Qr-Code.png')
+const real_path_qrcode = join(homedir(), 'AppData', 'Local', 'Qr-Code.png')
 const createWindow = () => {
 
     const win = new BrowserWindow({
         width: 700,
         height: 800,
-        resizable: false,
+        maxWidth: 1200,
+        maxHeight: 1000,
+        minHeight: 600,
+        minWidth: 500,
+        resizable: true,
         title: "Upload Files",
         titleBarStyle: "default",
         autoHideMenuBar: false,
@@ -86,15 +91,18 @@ const createWindow = () => {
                     label: "Qr-Code Wifi",
                     click: async () => {
                         if (!check_create_qr) {
-                            await ip_wifi(real_path_qrcode).catch(err => {
-                                console.log("Algo")
+                            await ip_wifi(real_path_qrcode).then(data => {
+                                check_create_qr = data
+                                console.log(data)
+                            }).catch(err => {
+                                console.log(err)
                             })
-                            check_create_qr = 1
 
                         } else {
                             const wifi_qr = new BrowserWindow({
                                 width: 500,
                                 height: 500,
+                                title: "Qr-Code for Scan",
                                 resizable: false,
                                 autoHideMenuBar: true,
                                 titleBarStyle: "hiddenInset",
