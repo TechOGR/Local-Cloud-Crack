@@ -56,7 +56,7 @@ btn_close.addEventListener("click", (e) => {
 
 main_content.appendChild(el_span)
 let counter = 0
-
+const forCopy = []
 input_file.addEventListener("change", async (e) => {
 
   const item = e.target
@@ -72,7 +72,6 @@ input_file.addEventListener("change", async (e) => {
       ItemsName[FileItems[i].name] = FileItems[i].type
     }
     console.log(ItemsName)
-
     await fetch("/files_exists", {
       method: "POST",
       headers: {
@@ -81,12 +80,34 @@ input_file.addEventListener("change", async (e) => {
       body: JSON.stringify({ files: ItemsName })
     })
       .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(err => console.log(err))
+      .then(data => {
 
+        const keys_name = Object.keys(data.values)
+        const values_exists = Object.values(data.values)
+        
+        const listFiles = new DataTransfer()
+        // Me quedé por aquí .....
+        for (let i = 0; i < keys_name.length; i++) {
+          if (values_exists[i] === false) {
+            listFiles.files.item[i] = input_file.files[i]
+          } else {
+            const index = input_file.files[i].name == keys_name[i] ? input_file.files[i] : false
+
+
+            console.log(index)
+
+
+            alert(`Se eliminó ${keys_name[i]} porque ya existe`)
+          }
+        }
+        // input_file.files = listFiles.files
+        console.log(input_file.files)
+        console.log(`####${listFiles.files[0]}####`)
+      })
+      .catch(err => console.log(err))
   }
 
-  Eject()
+  await Eject()
 
 
   if (objectFiles.length != 1 && objectFiles.length != 0) {
@@ -120,9 +141,9 @@ input_file.addEventListener("change", async (e) => {
 
     content_file_name.appendChild(button_element)
 
-    for (let i = 0; i < listFiles.length; i++) {
+    for (f of listFiles) {
 
-      el_span.appendChild(listFiles[i])
+      el_span.appendChild(f)
 
     }
 
@@ -172,20 +193,17 @@ input_file.addEventListener("change", async (e) => {
 })
 
 form.addEventListener("submit", async (event) => {
-
   async function getFilesExists() {
-    await fetch('/files_exists', {
+    await fetch("/files_exists", {
       method: "GET"
     }).then(response => response.json())
       .then(data => {
-        console.log(data)
-        const keys_name = Object.keys(data)
-        const values_exists = Object.values(data)
-
+        const keys_name = Object.keys(data);
+        const values_exists = Object.values(data);
+        console.log(values_exists)
         for (let i = 0; i < keys_name.length; i++) {
-          if (!values_exists[i]) {
-
-            event.preventDefault();
+          if (values_exists[i] == false) {
+            event.preventDefault()
 
             const XML_Http_Req = new XMLHttpRequest();
             const form_data = new FormData(form);
@@ -198,13 +216,16 @@ form.addEventListener("submit", async (event) => {
 
             XML_Http_Req.open("POST", "/upload");
             XML_Http_Req.send(form_data);
-          }
-          else {
-            alert(`El archivo ${keys_name[i]} ya existe`)
+          } else {
+            alert("Ya existe")
           }
         }
-      }).catch(err => console.log(err))
+      }).catch(error => console.log(error))
   }
-  await getFilesExists()
+  try {
+    await getFilesExists();
+  } catch (err) {
+    console.log(err)
+  }
 
 });
