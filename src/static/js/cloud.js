@@ -1,6 +1,7 @@
 import {
-    handlerCLickButton,
-    handlerClickContainer
+    handlerClickButton,
+    handlerClickContainer,
+    handlerKeys
 } from "./handlers_cloud.js";
 
 const user_agent = navigator.userAgent
@@ -11,8 +12,13 @@ all_container.forEach((elemento) => {
     elemento.style.cssText = "widht: 200px; height: 200px;"
     elemento.addEventListener("click", handlerClickContainer)
 })
-
-btn_back.addEventListener("click", handlerCLickButton)
+document.addEventListener("keypress", (e) => {
+    console.log(e.key)
+    if(e.key == "1"){
+        handlerClickButton()
+    }
+})
+btn_back.addEventListener("click", handlerClickButton)
 
 if (user_agent.match(/Android/i) || user_agent.match(/iPhone/i)) {
 
@@ -28,3 +34,5 @@ if (user_agent.match(/Android/i) || user_agent.match(/iPhone/i)) {
         left: 5px;
     `
 }
+
+handlerKeys()

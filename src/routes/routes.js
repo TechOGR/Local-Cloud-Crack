@@ -149,7 +149,7 @@ const up = multer({
 let ListFilesGet = {}
 
 
-rutas.post("/files_exists", (req, res) => {
+rutas.post("/files_exists", async (req, res) => {
     const files = req.body.files
     const keys = Object.keys(files)
     const values = Object.values(files)
@@ -213,6 +213,7 @@ rutas.post("/files_exists", (req, res) => {
         }
     }
 
+
     const ValueExists = Object.values(Exists)
     const Names = {}
     for (let i = 0; i < FullItemsPath.length; i++) {
@@ -220,8 +221,9 @@ rutas.post("/files_exists", (req, res) => {
     }
 
     ListFilesGet = Names
+    console.log(Names)
 
-    res.json({ hola: "Como has estado ?" })
+    res.json({ values: Names })
 
 })
 

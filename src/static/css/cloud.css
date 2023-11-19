@@ -128,6 +128,46 @@ body {
     cursor: pointer;
 }
 
+.container_search_bar {
+    position: absolute;
+    top: 10px;
+    width: 40%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px black;
+    background-color: rgb(65, 16, 52);
+}
+.container_search_bar .input_search {
+    width: 80%;
+    height: 100%;
+    background: rgb(65, 16, 52);
+    box-shadow: inset 0 0 5px black;
+    color: white;
+    text-shadow: 0 0 3px white;
+    text-align: center;
+    font-family: "Arial Rounded MT";
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+}
+.container_search_bar .btn_search {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    background: rgb(65, 16, 52);
+    box-shadow: inset 0 0 5px black;
+    text-align: center;
+    cursor: pointer;
+}
+
 @keyframes change_color {
     0% {
         background: linear-gradient(to bottom right, rgb(255, 0, 179), #000, rgb(255, 0, 34));

@@ -3,10 +3,7 @@ const createElementContainer = (item, status, type) => {
     elementContainer.classList = "container_items";
     console.log(item, status, type)
 
-
-
     const fileImage = document.createElement("img");
-
 
     fileImage.src = status ? "items/folder.png" : `items/${type}.png`;
     fileImage.id = "imagenes";
@@ -31,7 +28,7 @@ const createElementContainer = (item, status, type) => {
     return elementContainer;
 }
 
-export const handlerCLickButton = async (e) => {
+export const handlerClickButton = async () => {
     await fetch("/back", {
         method: "GET"
     }).then(response => response.json())
@@ -72,5 +69,20 @@ export const handlerClickContainer = async (e) => {
         })
         .catch(error => console.log(error))
 }
-
-export default { handlerCLickButton, handlerClickContainer }
+const container_search = document.createElement("div")
+const input_search = document.createElement("input")
+const btn_search = document.createElement("button")
+container_search.className = "container_search_bar";
+input_search.className = "input_search"
+btn_search.className = "btn_search"
+input_search.type = "text"
+input_search.textContent = "Hola"
+container_search.appendChild(input_search)
+container_search.appendChild(btn_search)
+export const handlerKeys = () => {
+    document.addEventListener("keypress", (event) => {
+        if (event.key == "Y") {
+            document.body.append(container_search)
+        }
+    })
+}
